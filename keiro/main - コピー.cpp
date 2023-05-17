@@ -10,7 +10,7 @@ using namespace std;
 using namespace chrono;
 
 
-vector<vector<double>> generate_coordinates(int cube_size = 10) {
+vector<vector<double>> generate_coordinates(int cube_size) {
     vector<vector<double>> coordinates;
     double offset = static_cast<double>(cube_size) / 2.0;
     for (int x = 0; x <= cube_size; ++x) {
@@ -44,18 +44,9 @@ vector<int> greedy_path(const vector<vector<double>>& coordinates, double s) {
 
     while (!unvisited.empty()) {
         double min_distance = 100;
-        //int nearest_neighbor = -1;
         int nearest_neighbor = *unvisited.begin();
         for (const int& neighbor : unvisited) {
             double dist = distance(coordinates[current], coordinates[neighbor]);
-            /*if (dist <= s) {
-                nearest_neighbor = neighbor;
-                break;
-            }
-            else if (dist < min_distance) {
-                min_distance = dist;
-                nearest_neighbor = neighbor;
-            }*/
             if (dist <= s) {
                 nearest_neighbor = neighbor;
                 break;
@@ -64,7 +55,6 @@ vector<int> greedy_path(const vector<vector<double>>& coordinates, double s) {
         current = nearest_neighbor;
         path.push_back(current);
         unvisited.erase(current);
-        //std::cout << "a" << std::endl;
     }
     return path;
 }
