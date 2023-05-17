@@ -1,1 +1,3 @@
-﻿  keiro.vcxproj -> C:\Users\kanta\Desktop\game\keiro\Debug\keiro.exe
+﻿  main.cpp
+C:\Users\ku-admin\Desktop\game\keiro\main.cpp(50,23): warning C4018: '<': signed と unsigned の数値を比較しようとしました。
+  keiro.vcxproj -> C:\Users\ku-admin\Desktop\game\keiro\Debug\keiro.exe

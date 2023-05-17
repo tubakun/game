@@ -43,17 +43,13 @@ vector<int> greedy_path(const vector<vector<double>>& coordinates, double s) {
     unvisited.erase(current);
 
     while (!unvisited.empty()) {
-        double min_distance = numeric_limits<double>::infinity();
-        int nearest_neighbor = -1;
+        double min_distance = 100;
+        int nearest_neighbor = *unvisited.begin();
         for (const int& neighbor : unvisited) {
             double dist = distance(coordinates[current], coordinates[neighbor]);
             if (dist <= s) {
                 nearest_neighbor = neighbor;
                 break;
-            }
-            else if (dist < min_distance) {
-                min_distance = dist;
-                nearest_neighbor = neighbor;
             }
         }
         current = nearest_neighbor;
@@ -75,9 +71,9 @@ int main() {
     int n = 100;
     double s = 1.0;
 
-    steady_clock::time_point start_time = steady_clock::now();
-
     vector<vector<double>> coordinates = generate_coordinates(n);
+
+    steady_clock::time_point start_time = steady_clock::now();
     vector<int> path = greedy_path(coordinates, s);
     output_path_to_file(path, "path_output.txt");
 
