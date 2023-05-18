@@ -33,11 +33,21 @@ vector<vector<double>> read_coordinates_from_file(const string& filename) {
 
 
 double distance(const vector<double>& p1, const vector<double>& p2) {
+    /*
     double sum = 0.0;
     for (size_t i = 0; i < p1.size(); ++i) {
         sum += pow(p1[i] - p2[i], 2);
     }
-    return sqrt(sum);
+    return sqrt(sum);*/
+    
+    double x_diff = p1[0] - p2[0];
+    double y_diff = p1[1] - p2[1];
+    double z_diff = p1[2] - p2[2];
+    x_diff = std::abs(x_diff);
+    y_diff = std::abs(y_diff);
+    z_diff = std::abs(z_diff);
+    double max_diff = std::max({ x_diff, y_diff, z_diff });
+    return max_diff;
 }
 
 void output_path_to_file(const vector<int>& path, const string& filename) {
@@ -75,8 +85,8 @@ void greedy_path_threaded(const vector<vector<double>>& coordinates, double s, i
 }
 
 int main() {
-    double s = 1.0;
-    int heiretu = 32;
+    double s = 1.1;
+    int heiretu = 16;
 
     vector<vector<double>> coordinates = read_coordinates_from_file("sphere.txt");
 
