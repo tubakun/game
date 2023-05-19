@@ -85,10 +85,10 @@ void greedy_path_threaded(const vector<vector<double>>& coordinates, double s, i
 }
 
 int main() {
-    double s = 1.1;
+    double s = 1;
     int heiretu = 16;
 
-    vector<vector<double>> coordinates = read_coordinates_from_file("sphere.txt");
+    vector<vector<double>> coordinates = read_coordinates_from_file("bunny.txt");
 
     steady_clock::time_point start_time = steady_clock::now();
 
