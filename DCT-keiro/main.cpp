@@ -33,30 +33,35 @@ vector<vector<double>> read_coordinates_from_file(const string& filename) {
 
 
 double distance(const vector<double>& p1, const vector<double>& p2) {
-    /*
     double sum = 0.0;
     for (size_t i = 0; i < p1.size(); ++i) {
         sum += pow(p1[i] - p2[i], 2);
     }
-    return sqrt(sum);*/
-    
-    double x_diff = p1[0] - p2[0];
-    double y_diff = p1[1] - p2[1];
-    double z_diff = p1[2] - p2[2];
-    x_diff = std::abs(x_diff);
-    y_diff = std::abs(y_diff);
-    z_diff = std::abs(z_diff);
-    double max_diff = std::max({ x_diff, y_diff, z_diff });
-    return max_diff;
+    return sqrt(sum);
 }
 
-void output_path_to_file(const vector<int>& path, const string& filename) {
+void output_path_to_file(const vector<int>& path, const vector<vector<double>>& coordinates, const string& filename) {
     ofstream outfile(filename);
     for (const int& p : path) {
         outfile << p << endl;
     }
     outfile.close();
 }
+
+void output_coordinates_to_file(const vector<int>& path, const vector<vector<double>>& coordinates, const string& filename) {
+    ofstream outfile(filename);
+    for (const int& index : path) {
+        const vector<double>& point = coordinates[index];
+        for (const double& coordinate : point) {
+            outfile << coordinate << " ";
+        }
+        outfile << endl;
+    }
+    outfile.close();
+}
+
+
+
 
 
 void greedy_path_threaded(const vector<vector<double>>& coordinates, double s, int start_index, int end_index, vector<int>& path) {
@@ -85,10 +90,10 @@ void greedy_path_threaded(const vector<vector<double>>& coordinates, double s, i
 }
 
 int main() {
-    double s = 1;
-    int heiretu = 16;
+    double s = 1.0;
+    int heiretu = 8;
 
-    vector<vector<double>> coordinates = read_coordinates_from_file("bunny.txt");
+    vector<vector<double>> coordinates = read_coordinates_from_file("output_vertex.txt");
 
     steady_clock::time_point start_time = steady_clock::now();
 
@@ -98,7 +103,7 @@ int main() {
 
     for (int i = 0; i < heiretu; ++i) {
         int start_index = i * increment;
-        int end_index = (i == heiretu-1) ? coordinates.size() : start_index + increment;
+        int end_index = (i == heiretu - 1) ? coordinates.size() : start_index + increment;
         threads.push_back(thread(greedy_path_threaded, ref(coordinates), s, start_index, end_index, ref(paths[i])));
     }
 
@@ -115,9 +120,9 @@ int main() {
     steady_clock::time_point end_time = steady_clock::now();
     duration<double> elapsed_time = duration_cast<duration<double>>(end_time - start_time);
 
-    output_path_to_file(final_path, "path_output.txt");
+    output_path_to_file(final_path, coordinates, "path_output.txt");
+    output_coordinates_to_file(final_path, coordinates, "coordinates_output.txt");
 
-    
     cout << "Execution time: " << elapsed_time.count() << " seconds" << endl;
 
     return 0;
