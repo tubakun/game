@@ -33,12 +33,16 @@ vector<vector<double>> read_coordinates_from_file(const string& filename) {
 
 
 double distance(const vector<double>& p1, const vector<double>& p2) {
-    double sum = 0.0;
+    double maxDiff = 0.0;
     for (size_t i = 0; i < p1.size(); ++i) {
-        sum += pow(p1[i] - p2[i], 2);
+        double diff = fabs(p1[i] - p2[i]);
+        if (diff > maxDiff) {
+            maxDiff = diff;
+        }
     }
-    return sqrt(sum);
+    return maxDiff;
 }
+
 
 void output_path_to_file(const vector<int>& path, const string& filename) {
     ofstream outfile(filename);
@@ -65,7 +69,13 @@ void greedy_path_threaded(const vector<vector<double>>& coordinates, double s, i
             double dist = distance(coordinates[current], coordinates[neighbor]);
             if (dist <= s) {
                 nearest_neighbor = neighbor;
-                break;
+                break;  
+            }
+            else {
+                if (dist < min_distance) {
+                    min_distance = dist;
+                    nearest_neighbor = neighbor;
+                }
             }
         }
         current = nearest_neighbor;
@@ -75,10 +85,10 @@ void greedy_path_threaded(const vector<vector<double>>& coordinates, double s, i
 }
 
 int main() {
-    double s = 1.0;
-    int heiretu = 4;
+    double s = 1;
+    int heiretu = 1;
 
-    vector<vector<double>> coordinates = read_coordinates_from_file("sphere.txt");
+    vector<vector<double>> coordinates = read_coordinates_from_file("output_vertex.txt");
 
     steady_clock::time_point start_time = steady_clock::now();
 
@@ -88,7 +98,7 @@ int main() {
 
     for (int i = 0; i < heiretu; ++i) {
         int start_index = i * increment;
-        int end_index = (i == heiretu-1) ? coordinates.size() : start_index + increment;
+        int end_index = (i == heiretu - 1) ? coordinates.size() : start_index + increment;
         threads.push_back(thread(greedy_path_threaded, ref(coordinates), s, start_index, end_index, ref(paths[i])));
     }
 
@@ -107,7 +117,6 @@ int main() {
 
     output_path_to_file(final_path, "path_output.txt");
 
-    
     cout << "Execution time: " << elapsed_time.count() << " seconds" << endl;
 
     return 0;
